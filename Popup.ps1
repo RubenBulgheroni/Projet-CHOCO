@@ -1,12 +1,22 @@
-[CmdletBinding()]
-param(
-  [Parameter(Mandatory=$true)]
-  [string]$Message
-)
+# Créez le message à afficher dans la pop-up
+$message = "Voulez-vous exécuter le script ?"
 
-$wshell = New-Object -ComObject Wscript.Shell
-$result = $wshell.Popup($Message,0,"Bienvenue",4)
+# Créer une fenêtre pop-up avec un bouton Oui/Non
+$yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes","Script will be executed."
+$no = New-Object System.Management.Automation.Host.ChoiceDescription "&No","Script will not be executed."
+$options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
 
-if ($result -eq 6) {
-  # Lancer le script ici
+# Afficher la pop-up
+$result = $host.ui.PromptForChoice("Script Execution", $message, $options, 0)
+
+# Vérifier le choix de l'utilisateur et prendre les mesures appropriées.
+if ($result -eq 0) {
+    # L'utilisateur a sélectionné "Oui".
+    # Exécutez le script ici
+    Write-Host "The script will run"
+}
+else {
+    # L'utilisateur a sélectionné "Non".
+    # Ne pas exécuter le script
+    Write-Host "The script will not run"
 }
