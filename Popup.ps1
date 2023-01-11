@@ -18,5 +18,7 @@ if ($result -eq 0) {
 else {
     # L'utilisateur a sélectionné "Non".
     # Ne pas exécuter le script
-    Write-Host "The script will not run"
+    Exit-PSSession
+    Write-Host "Le script ne c'est pas lancé"
+   break
 }
