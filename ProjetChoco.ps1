@@ -1,5 +1,18 @@
-# Place le script dans le bon dossier
-cd .\projet\
+# Mode d'emploie du script
+Write-Host "Voulez-vous afficher le mode d'emploi du script ?" -ForegroundColor Green
+
+$modeemploi = Read-Host "Oui ou Non (1 = oui) (2 = Non)"
+
+switch ($modeemploi) {
+
+    1{  Write-Host "Étape 1 : Vous devez lancer votre scripte en mode administrateur" -ForegroundColor Green
+        Write-Host "Étape 2 : Vous devez mettre les fichiers suivants dans le même dossier --> Projetchoco.ps1, Popup.ps1, InstallChoco.ps1, PopupAdmin.ps1" -ForegroundColor Green
+        Write-Host "Étape 3 : Si vous souhaitez pérsonnaliser la (3) préconfiguration, vous devez vous rendre sur --> https://community.chocolatey.org/packages" -ForegroundColor Green
+        Write-Host "Étape 3.1 : Une fois sur le site de chocolatey vous devez prendre la ligne de commande à côté de votre logiciel puis copié la à la ligne 52 et ajouté les options --force -y -d " -ForegroundColor Green
+        Start-Sleep -Seconds 20
+    }
+    2{    }
+}
 
 # Vérifie que le script est bien lancé en administrateur
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))
@@ -10,6 +23,12 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     # Ferme le script
     exit
 }
+
+# Trouve le script principale et le replace dans le bon répertoire
+
+$filePath1 = Get-ChildItem -Recurse | Where-Object {$_.Name -eq "ProjetChoco.ps1"} | Select-Object -ExpandProperty Directory
+$filePath = $filePath1,$filePath2 | Select-Object -Unique
+cd $filePath
 
 # Demande à l'utilisateur de lancer le script ou non
 .\Popup.ps1

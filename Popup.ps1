@@ -13,12 +13,12 @@ $result = $host.ui.PromptForChoice("Script Execution", $message, $options, 0)
 if ($result -eq 0) {
     # L'utilisateur a sélectionné "Oui".
     # Exécutez le script ici
-    Write-Host "The script will run"
+    Write-Host "Le script s'est lancé"
 }
 else {
     # L'utilisateur a sélectionné "Non".
     # Ne pas exécuter le script
     Exit-PSSession
-    Write-Host "Le script ne c'est pas lancé"
+    Write-Host "Le script ne s'est pas lancé"
    break
 }
