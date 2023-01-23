@@ -37,10 +37,11 @@ cd $filePath
 Write-host "-------------------------------------------------------------------" -ForegroundColor red
 Write-Host "Ecrivez le numéro de l'option en fonction de ce que vous choisissez" -ForegroundColor red
 Write-host "-------------------------------------------------------------------" -ForegroundColor red
-Write-Host "Option (1) pour installer Chocolatey" -ForegroundColor Cyan
-Write-Host "Option (2) pour mettre à jour tous les logiciels" -ForegroundColor Yellow
+Write-Host "Option (1) Pour installer Chocolatey" -ForegroundColor Cyan
+Write-Host "Option (2) Pour rechercher et installer des logiciels" -ForegroundColor Yellow
 Write-Host "Option (3) Pour installer une préconfiguration" -ForegroundColor Green
-Write-Host "Option (4) Pour installer un logiciel sur un autre pc (Beta)" -ForegroundColor Magenta
+Write-Host "Option (4) Pour mettre à jour tous les logiciels" -ForegroundColor Magenta
+Write-Host "Option (5) " -ForegroundColor Magenta
 
 # Demande à l'utilisateur de choisir une option
 $response = Read-Host "Entrez le numéro de l'option"
@@ -48,19 +49,45 @@ $response = Read-Host "Entrez le numéro de l'option"
 # Traite la réponse de l'utilisateur en fonction de son choix
 switch ($response) {
     1 { Powershell.exe -NoExit .\InstallChoco.ps1 } # Exécute le script InstallChoco.ps1
-    2 { choco upgrade all } # Met à jour tous les logiciels installés avec Chocolatey
+    2{
+        $searchTerm = Read-Host "Entrez le logiciel que vous voulez recherchez"
+        $results = choco search $searchTerm
+        $i = 1
+        foreach ($result in $results) {
+            $highlightedResult = $result -replace $searchTerm, ("`e[32m" + $searchTerm + "`e[0m")
+            Write-Host "$i. $highlightedResult"
+            $i++
+        }
+        $selectedIndex = Read-Host "Entrez le numéro du logiciel que vous voulez installer"
+        $selectedPackage = $results[$selectedIndex - 1]
+        choco install $selectedPackage --force -y -d --pre
+        }
+    
     3 { 
-        choco install firefox --force -y -d  # Installe Firefox
-        choco install 7zip --force -y -d  # Installe 7zip
-        choco install googlechrome --force -y -d  # Installe Google Chrome
-        choco install jre8 --force -y -d  # Installe Java JRE 8
-        choco install notepadplusplus.install --force -y -d  # Installe Notepad++
+    # Liste des logiciels à installer
+    $softwareList = @("Firefox", "7zip", "Google Chrome", "Java JRE 8", "Notepad++")
+
+    # Affichage de la liste des logiciels
+    Write-Host "Liste :"
+    foreach ($software in $softwareList) {
+    Write-Host "- $software"
+}
+
+# Demande de confirmation avant installation
+    $confirmation = Read-Host "Voulez-vous installer cette préconfiguration? [oui] ou [non]"
+
+    if ($confirmation -eq "oui") {
+    # Installation des logiciels
+    choco install firefox --force -y -d
+    choco install 7zip --force -y -d
+    choco install googlechrome --force -y -d
+    choco install jre8 --force -y -d
+    choco install notepadplusplus.install --force -y -d
+}
     }
-    4 { 
-        $AdresseIP = Read-Host "Entrez l'adresse IP de votre PC :" # Demande l'adresse IP de l'ordinateur cible
-        $Logiciel = Read-Host "Que voulez-vous installer ?" # Demande quel logiciel installer
-        $session = New-PSSession -ComputerName $AdresseIP  # Crée une session PowerShell distante vers l'ordinateur cible
-        Invoke-Command -Session $session -ScriptBlock { choco install $Logiciel }
+    4 { choco upgrade all } # Met à jour tous les logiciels installés avec Chocolatey
+    5 { 
+        
     }
     default { Write-Host "Choix non valide" }
 }

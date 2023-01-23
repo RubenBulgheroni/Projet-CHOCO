@@ -11,7 +11,7 @@ $result = $host.ui.PromptForChoice("Script Execution", $message, $options, 0)
 
 # Vérifier le choix de l'utilisateur et prendre les mesures appropriées.
 if ($result -eq 0) {
-    # L'utilisateur a sélectionné "Oui".
+    # L'utilisateur a sélectionné "Oui".e
     # Exécutez le script ici
     Write-Host "Le script s'est lancé"
 }

@@ -5,4 +5,4 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     break
 }
 
-# rest of your script goes here
+# rest of your script goes heree
